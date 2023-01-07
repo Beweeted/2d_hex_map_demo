@@ -8,6 +8,22 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "TileMap",
+"class": "MyTileMap",
+"language": "GDScript",
+"path": "res://my_tilemap.gd"
+}, {
+"base": "Reference",
+"class": "Tile",
+"language": "GDScript",
+"path": "res://tile.gd"
+} ]
+_global_script_class_icons={
+"MyTileMap": "",
+"Tile": ""
+}
+
 [application]
 
 config/name="Hexagonal Game"
