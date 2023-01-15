@@ -1,16 +1,19 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://troll.tscn" type="PackedScene" id=2]
 [ext_resource path="res://my_tilemap.gd" type="Script" id=3]
+[ext_resource path="res://board_gameplay_manager.gd" type="Script" id=4]
 
 [node name="Map" type="Node2D"]
+script = ExtResource( 4 )
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2( -467, 173 )
+mode = 2
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 84, 97 )
-cell_custom_transform = Transform2D( 84, 0, 0, 0, 0, 0 )
+cell_custom_transform = Transform2D( 84, 0, 0, 97, 0, 0 )
 cell_half_offset = 1
 cell_tile_origin = 1
 centered_textures = true

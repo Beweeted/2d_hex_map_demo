@@ -6,33 +6,20 @@ enum BumpState {STOPPED, FORWARD, BACKWARD}
 const BASE_MOTION_SPEED = 300
 const ROTATION_SPEED = 1000
 
-onready var tilemap: MyTileMap = get_parent()
-
-onready var my_tile: Tile = tilemap.get_map_tile(self.position, true)
-onready var dest_tile: Tile = my_tile
-onready var bump_tile: Tile = my_tile
+onready var my_tile: Tile
+onready var dest_tile: Tile
+onready var bump_tile: Tile
 
 var moving: bool = false
 var spinning: bool = false
 var bumping: int = 0
 
-func _ready() -> void:
-	print("Starting location. %s" % my_tile)
 
-
-func _input(_InputEvent: InputEvent) -> void:
-	if not spinning and not moving:
-		var input := get_input_vector(_InputEvent)
-		var hex_motion := input_to_hex_motion(input)
-		if hex_motion != Vector2.ZERO:
-			var target_tile = tilemap.get_map_tile(my_tile.coords + hex_motion)
-			if target_tile.is_moveable():
-				dest_tile = target_tile
-				moving = true
-			else:
-				#spinning = true
-				bump_tile = target_tile
-				bumping = BumpState.FORWARD
+func reset_tile(tilemap: MyTileMap) -> void:
+	my_tile = tilemap.get_map_tile(self.position, true)
+	dest_tile = my_tile
+	bump_tile = my_tile
+	print("Reinitializing tile location. %s" % my_tile)
 
 
 func move_to_hex(target_tile: Tile) -> bool:
@@ -44,30 +31,6 @@ func move_to_hex(target_tile: Tile) -> bool:
 		print("ERROR: Tile unmoveable! %s" % target_tile)
 		spinning = true
 		return false
-
-
-func input_to_hex_motion(input_vec: Vector2) -> Vector2:
-	var motion = Vector2()
-	if input_vec.x > 0:
-		motion.x = 1
-	if input_vec.x < 0:
-		motion.x = -1
-	if input_vec.y > 0:
-		motion.y = 1
-	if input_vec.y < 0:
-		motion.y = -1
-
-	# Not moving
-	if input_vec == Vector2.ZERO:
-		return Vector2.ZERO
-	# Can't move sideways
-	if motion.x != 0 and motion.y == 0:
-		return Vector2.ZERO
-
-	# Moving on diagonal
-	if motion.x != 0 and motion.y != 0:
-		motion.y = min(motion.y, 0) if int(my_tile.coords.x) % 2 == 0 else max(motion.y, 0)
-	return motion
 
 
 func get_hex_direction(direction_vector: Vector2) -> int:
@@ -90,19 +53,10 @@ func get_hex_direction(direction_vector: Vector2) -> int:
 	return direction
 
 
-func get_input_vector(_Input: InputEvent) -> Vector2:
-	var motion = Vector2()
-	motion.x = Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
-	motion.y = Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
-	if motion != Vector2.ZERO:
-		return motion
-	return Vector2.ZERO
-
-
-func _physics_process(delta) -> void:
-	move(delta)
-	spin(delta)
-	bump(delta)
+func is_animating() -> bool:
+	if moving or spinning or bumping != BumpState.STOPPED:
+		return true
+	return false
 
 
 func move(delta) -> void:
@@ -114,6 +68,7 @@ func move(delta) -> void:
 	if position == dest_tile.position:
 		my_tile = dest_tile
 		moving = false
+		print("Move finished")
 
 
 func spin(delta) -> void:
@@ -141,5 +96,10 @@ func bump(delta) -> void:
 		bumping += 1
 		if bumping >= BumpState.size():
 			bumping = BumpState.STOPPED
+			print("Bump finished")
 
 
+func _physics_process(delta) -> void:
+	move(delta)
+	spin(delta)
+	bump(delta)

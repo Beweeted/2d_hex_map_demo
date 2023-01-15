@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "BoardManager",
+"language": "GDScript",
+"path": "res://board_gameplay_manager.gd"
+}, {
 "base": "TileMap",
 "class": "MyTileMap",
 "language": "GDScript",
@@ -20,6 +25,7 @@ _global_script_classes=[ {
 "path": "res://tile.gd"
 } ]
 _global_script_class_icons={
+"BoardManager": "",
 "MyTileMap": "",
 "Tile": ""
 }
