@@ -14,20 +14,44 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://board_gameplay_manager.gd"
 }, {
+"base": "KinematicBody2D",
+"class": "Infantry",
+"language": "GDScript",
+"path": "res://infantry.gd"
+}, {
 "base": "TileMap",
 "class": "MyTileMap",
 "language": "GDScript",
 "path": "res://my_tilemap.gd"
 }, {
 "base": "Reference",
+"class": "Terrain",
+"language": "GDScript",
+"path": "res://terrain.gd"
+}, {
+"base": "Reference",
 "class": "Tile",
 "language": "GDScript",
 "path": "res://tile.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Troll",
+"language": "GDScript",
+"path": "res://troll.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Unit",
+"language": "GDScript",
+"path": "res://unit.gd"
 } ]
 _global_script_class_icons={
 "BoardManager": "",
+"Infantry": "",
 "MyTileMap": "",
-"Tile": ""
+"Terrain": "",
+"Tile": "",
+"Troll": "",
+"Unit": ""
 }
 
 [application]

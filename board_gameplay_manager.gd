@@ -15,16 +15,7 @@ func _input(_InputEvent: InputEvent) -> void:
 		var hex_motion := input_to_hex_motion(input)
 		if hex_motion != Vector2.ZERO:
 			var target_tile = tilemap.get_map_tile(troll.my_tile.coords + hex_motion)
-			print("Target tile: %s  Is moveable: %s" % [target_tile, target_tile.is_moveable()])
-			#UPDATE THIS SO IT HANDLES THE TROLL NOT BEING A CHILD OF THE TILEMAP FOR POSITION ANYMORE
-			if target_tile.is_moveable():
-				troll.dest_tile = target_tile
-				troll.moving = true
-				print("Move start %s" % troll.dest_tile)
-			else:
-				troll.bump_tile = target_tile
-				troll.bumping = troll.BumpState.FORWARD
-				print("Bump start %s" % troll.bump_tile)
+			troll.move_to_hex(target_tile)
 
 
 func get_input_vector(_Input: InputEvent) -> Vector2:
