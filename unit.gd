@@ -11,6 +11,8 @@ onready var my_tile: Tile
 onready var dest_tile: Tile
 onready var bump_tile: Tile
 
+signal finished_moving
+
 var moving: bool = false
 var spinning: bool = false
 var bumping: int = 0
@@ -21,6 +23,7 @@ var move_points: int
 func _ready():
 	recharge_move_points_to_max()
 
+
 func reset_tile(tilemap: MyTileMap) -> void:
 	my_tile = tilemap.get_map_tile(self.position, true)
 	dest_tile = my_tile
@@ -28,7 +31,7 @@ func reset_tile(tilemap: MyTileMap) -> void:
 	print("Reinitializing tile location. %s" % my_tile)
 
 
-func move_to_hex(target_tile: Tile) -> bool:
+func try_moving(target_tile: Tile) -> bool:
 	var move_points_cost = calculate_move_cost(target_tile)
 	if move_points_cost > move_points:
 		print("ERROR: Tile unmoveable! Move points: %s, Move cost: %s, Tile: %s" % [move_points, move_points_cost, target_tile])
@@ -102,6 +105,7 @@ func move_animation(delta) -> void:
 	if position == dest_tile.position:
 		my_tile = dest_tile
 		moving = false
+		emit_signal("finished_moving")
 		print("Move finished. Move points remaining: %s/%s" % [move_points, max_move_points])
 
 
