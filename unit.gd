@@ -1,6 +1,4 @@
-extends KinematicBody2D
-
-class_name Unit 
+class_name Unit extends KinematicBody2D
 
 const Terrain = preload("res://terrain.gd")
 enum HexDirection {STOPPED = -1, UP, UP_RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, UP_LEFT}
@@ -17,7 +15,8 @@ var moving: bool = false
 var spinning: bool = false
 var bumping: int = 0
 
-var move_points: int = 1000
+var max_move_points: int
+var move_points: int
 
 func reset_tile(tilemap: MyTileMap) -> void:
 	my_tile = tilemap.get_map_tile(self.position, true)
@@ -30,15 +29,23 @@ func move_to_hex(target_tile: Tile) -> bool:
 	var move_points_cost = move_cost(target_tile)
 	if move_points_cost > move_points:
 		print("ERROR: Tile unmoveable! Move points: %s, Move cost: %s, Tile: %s" % [move_points, move_points_cost, target_tile])
-		bump_tile = target_tile
-		bumping = BumpState.FORWARD
+		set_bump(target_tile)
 		return false
 	else:
-		print("Move start %s" % dest_tile)
-		move_points -= move_points_cost
-		dest_tile = target_tile
-		moving = true
+		print("Move start %s" % target_tile)
+		set_moving(target_tile, move_points_cost)
 		return true
+
+
+func set_bump(target_tile: Tile) -> void:
+	bump_tile = target_tile
+	bumping = BumpState.FORWARD
+
+
+func set_moving(target_tile: Tile, move_points_cost: int) -> void:
+	move_points -= move_points_cost
+	dest_tile = target_tile
+	moving = true
 
 
 func get_hex_direction(direction_vector: Vector2) -> int:
@@ -68,20 +75,31 @@ func is_animating() -> bool:
 
 
 func move_cost(tile: Tile) -> int:
-	return 0
+	return 1
+
+
+func recharge_move_points_to_max() -> int:
+	print("Reset to max! Max: %s" % max_move_points)
+	return recharge_move_points(max_move_points)
+
+
+func recharge_move_points(extra_points: int) -> int:
+	print("Recharging move points. Requested amount: %s, Max: %s" % [extra_points, max_move_points])
+	move_points = int(min(max_move_points, extra_points))
+	return move_points
 
 
 func move_animation(delta) -> void:
 	if not moving:
 		return
 	var move_cost = move_cost(dest_tile)
-	var speed = BASE_MOTION_SPEED * move_cost / 100
+	var speed = BASE_MOTION_SPEED * move_cost
 	var step := position.move_toward(dest_tile.position, delta * speed) - position
 	move_and_collide(step)
 	if position == dest_tile.position:
 		my_tile = dest_tile
 		moving = false
-		print("Move finished. Move points remaining: %s" % move_points)
+		print("Move finished. Move points remaining: %s/%s" % [move_points, max_move_points])
 
 
 func spin_animation(delta) -> void:

@@ -1,9 +1,7 @@
-extends "res://unit.gd"
-
-class_name Infantry
+class_name Infantry extends "res://unit.gd"
 
 func move_cost(tile: Tile) -> int:
-	var move_cost = 100 # Shifted to allow fractional movement costs, like roads.
+	var move_cost = 1
 	var immovable = 9999999
 	var terrain_type = tile.get_terrain_type()
 
