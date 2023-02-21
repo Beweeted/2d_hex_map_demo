@@ -18,6 +18,9 @@ var bumping: int = 0
 var max_move_points: int
 var move_points: int
 
+func _ready():
+	recharge_move_points_to_max()
+
 func reset_tile(tilemap: MyTileMap) -> void:
 	my_tile = tilemap.get_map_tile(self.position, true)
 	dest_tile = my_tile
@@ -26,7 +29,7 @@ func reset_tile(tilemap: MyTileMap) -> void:
 
 
 func move_to_hex(target_tile: Tile) -> bool:
-	var move_points_cost = move_cost(target_tile)
+	var move_points_cost = calculate_move_cost(target_tile)
 	if move_points_cost > move_points:
 		print("ERROR: Tile unmoveable! Move points: %s, Move cost: %s, Tile: %s" % [move_points, move_points_cost, target_tile])
 		set_bump(target_tile)
@@ -74,7 +77,7 @@ func is_animating() -> bool:
 	return false
 
 
-func move_cost(tile: Tile) -> int:
+func calculate_move_cost(tile: Tile) -> int:
 	return 1
 
 
@@ -92,8 +95,8 @@ func recharge_move_points(extra_points: int) -> int:
 func move_animation(delta) -> void:
 	if not moving:
 		return
-	var move_cost = move_cost(dest_tile)
-	var speed = BASE_MOTION_SPEED * move_cost
+	var move_cost = calculate_move_cost(dest_tile)
+	var speed = BASE_MOTION_SPEED / move_cost
 	var step := position.move_toward(dest_tile.position, delta * speed) - position
 	move_and_collide(step)
 	if position == dest_tile.position:

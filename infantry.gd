@@ -1,6 +1,6 @@
-class_name Infantry extends "res://unit.gd"
+class_name Infantry extends Unit
 
-func move_cost(tile: Tile) -> int:
+func calculate_move_cost(tile: Tile) -> int:
 	var move_cost = 1
 	var immovable = 9999999
 	var terrain_type = tile.get_terrain_type()

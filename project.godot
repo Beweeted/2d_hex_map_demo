@@ -14,7 +14,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://board_gameplay_manager.gd"
 }, {
-"base": "KinematicBody2D",
+"base": "Unit",
 "class": "Infantry",
 "language": "GDScript",
 "path": "res://infantry.gd"
@@ -34,7 +34,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://tile.gd"
 }, {
-"base": "KinematicBody2D",
+"base": "Infantry",
 "class": "Troll",
 "language": "GDScript",
 "path": "res://troll.gd"
