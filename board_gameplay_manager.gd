@@ -1,5 +1,4 @@
-extends Node
-class_name BoardManager
+class_name BoardManager extends Node
 
 onready var tilemap = $TileMap
 onready var troll = $TileMap/Troll
@@ -26,10 +25,17 @@ func on_Unit_finished_moving() -> void:
 	is_animating = false
 
 
-func get_input_vector(_Input: InputEvent) -> Vector2:
+func get_input_vector(event: InputEvent) -> Vector2:
 	var motion = Vector2()
-	motion.x = Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
-	motion.y = Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
+	if event is InputEventMouseButton:
+		tilemap.print_mouse_click_location(event)
+		#get mouse coords
+		#if clicked tile is adjacent
+			#motion = towards clicked tile
+	if Input.is_action_pressed("move_right") or Input.is_action_pressed("move_left"):
+		motion.x = Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
+	if Input.is_action_pressed("move_down") or Input.is_action_pressed("move_up"):
+		motion.y = Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
 	if motion != Vector2.ZERO:
 		return motion
 	return Vector2.ZERO

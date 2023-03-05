@@ -33,7 +33,11 @@ func reset_tile(tilemap: MyTileMap) -> void:
 
 func try_moving(target_tile: Tile) -> bool:
 	var move_points_cost = calculate_move_cost(target_tile)
-	if move_points_cost > move_points:
+	if move_points == 0:
+		print("Out of move points!")
+		set_bump(target_tile)
+		return false
+	elif move_points_cost > move_points:
 		print("ERROR: Tile unmoveable! Move points: %s, Move cost: %s, Tile: %s" % [move_points, move_points_cost, target_tile])
 		set_bump(target_tile)
 		return false
@@ -84,9 +88,9 @@ func calculate_move_cost(tile: Tile) -> int:
 	return 1
 
 
-func recharge_move_points_to_max() -> int:
+func recharge_move_points_to_max() -> void:
 	print("Reset to max! Max: %s" % max_move_points)
-	return recharge_move_points(max_move_points)
+	recharge_move_points(max_move_points)
 
 
 func recharge_move_points(extra_points: int) -> int:
